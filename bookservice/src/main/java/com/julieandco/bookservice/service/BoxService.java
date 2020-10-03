@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Queue;
 
 @Service
@@ -43,7 +44,7 @@ public class BoxService {
 
     @Transactional
     public void addBook(Box box, Book receivedBook) {
-        boxRepository.getOne(box.getId()).getBooks().add(receivedBook);
+        //boxRepository.getOne(box.getId()).getBooks().add(receivedBook);
         //box.getBooks().add(receivedBook);
         Bookorder recOrder = null;
         List<Bookorder> byBookId = new ArrayList<>();
@@ -57,6 +58,13 @@ public class BoxService {
         }
 
         if(recOrder!=null){
+            Optional<Box> toBox = boxRepository.findById(box.getId());
+            if(toBox.isEmpty())
+                return;
+            Box newToBox = toBox.get();
+            recOrder.getBook().setBoxId(newToBox);
+            bookRepository.save(recOrder.getBook());
+
             nextOrderQueue=orderRepository.findByBookId(receivedBook.getId());
             if(!nextOrderQueue.isEmpty()) {
                 LocalDate min = LocalDate.now();
@@ -67,17 +75,18 @@ public class BoxService {
                     }
                 }
             }
-            //nextOrder=orderRepository.findByBookIdAndMinFromDate(receivedBook.getId());
-            if(nextOrder==null) {
-                recOrder.getBook().setAvailable(true);
-                orderRepository.delete(recOrder);
-            }
-            else {
-                orderRepository.delete(recOrder);
-                nextOrder.setSubmitted(true);
-                nextOrder.setFromDate(LocalDate.now());
-                orderRepository.save(nextOrder);
-                System.out.println(nextOrder.getUser().getUsername() + ", Your Order was submitted. Expect!");
+            if(recOrder.getDeliveryState()) {
+                //nextOrder=orderRepository.findByBookIdAndMinFromDate(receivedBook.getId());
+                if (nextOrder == null) {
+                    recOrder.getBook().setAvailable(true);
+                    orderRepository.delete(recOrder);
+                } else {
+                    orderRepository.delete(recOrder);
+                    nextOrder.setSubmitted(true);
+                    nextOrder.setFromDate(LocalDate.now());
+                    orderRepository.save(nextOrder);
+                    System.out.println(nextOrder.getUser().getUsername() + ", Your Order was submitted. Expect!");
+                }
             }
             //ordermovequeue
         }
@@ -86,11 +95,15 @@ public class BoxService {
     @Transactional
     public void checkOut(Box box, Bookorder bookorder){
         List<Bookorder> orderList = new ArrayList<>();
+        Bookorder toReceive;
         orderList = orderRepository.findByBookId(bookorder.getBook().getId());//.setDeliveryState(true);
         for(int i=0; i<orderList.size();++i)
         {
-            if(orderList.get(i).getSubmitted())
-                orderRepository.getOne(orderList.get(i).getId()).setDeliveryState(true);
+            if(orderList.get(i).getSubmitted()) {
+                toReceive = orderRepository.getOne(orderList.get(i).getId());
+                toReceive.setDeliveryState(true);
+                orderRepository.save(toReceive);
+            }
         }
         //order.isDelivered();
         boxRepository.getOne(box.getId()).getBooks().remove(bookorder.getBook());

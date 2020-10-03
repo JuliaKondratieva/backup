@@ -38,6 +38,8 @@ public class OrderService {
         else if(bookel.getAvailability()) {
             newOrder = new Bookorder(bookel, user);
             orderRepository.save(newOrder);
+            bookel.setAvailable(false);
+            bookRepository.save(bookel);
         }
 
         else{
