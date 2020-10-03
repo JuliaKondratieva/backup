@@ -1,8 +1,5 @@
 package com.julieandco.bookservice.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
@@ -27,21 +24,16 @@ public class Book {
     private boolean available;
     @Column
     private boolean needRepair;
-    //@JsonManagedReference(value = "bookorder")
+
     @OneToMany(mappedBy="book")
     private List<Bookorder> bookorder;
-    //@JsonBackReference(value = "boxId")
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Box boxId;
 
     public Book() {
-       /* title="";
-        author="";
-        year=0;
-        rating=0;
-        available=true;
-        needRepair=false;*/
+
     }
 
     public Book(String title, String author, long year, double rating, Genre genre){

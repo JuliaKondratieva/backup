@@ -1,7 +1,7 @@
 package com.julieandco.bookservice.entities;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.UUID;
 @Entity
@@ -16,8 +16,7 @@ public class Box {
     private String address;
 
     public Box() {
-       // books=new ArrayList<>();
-        //address="";
+
     }
 
     public List<Book> getBooks() {

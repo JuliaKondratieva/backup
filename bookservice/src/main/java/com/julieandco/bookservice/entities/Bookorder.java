@@ -1,9 +1,7 @@
 package com.julieandco.bookservice.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 @Entity
@@ -12,11 +10,11 @@ public class Bookorder {
     @Id
     @GeneratedValue
     private UUID id;
-    //@JsonBackReference(value = "book")
+
     @ManyToOne
     @JoinColumn
     private Book book;
-    //@JsonBackReference(value = "customer")
+
     @ManyToOne
     @JoinColumn
     private User customer;
@@ -31,10 +29,7 @@ public class Bookorder {
 
     public Bookorder()
     {
-        //book=new Book();
-        //customer=new User();
-        //deliveryState=false;
-        //submitted=true;
+
     }
 
     public Bookorder(Book book, User user){

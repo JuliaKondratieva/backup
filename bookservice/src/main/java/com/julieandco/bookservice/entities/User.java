@@ -1,7 +1,5 @@
 package com.julieandco.bookservice.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
@@ -13,14 +11,14 @@ public class User {
     private UUID idNumber;
     @Column
     private String username;
-    //@JsonManagedReference
+
     @OneToMany(mappedBy="customer")
     private List<Bookorder> bookorder;
 
 
     public User() {
         username = "";
-        //idNumber= UUID.randomUUID();
+
     }
 
     public List<Bookorder> getBookorder() {

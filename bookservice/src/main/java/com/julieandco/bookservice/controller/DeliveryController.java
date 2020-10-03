@@ -53,7 +53,7 @@ public class DeliveryController {
     public ResponseEntity<Void> checkOut(@RequestBody String deliverJson) {
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         DeliveryDTO deliver = gson.fromJson(deliverJson, DeliveryDTO.class);
-        //Bookorder toStorage = deliver.getBookorder();
+
         Book bookOut = deliver.getBook();
         Box takeOut = deliver.getBox();
         Box foundBox = boxService.findByAddress(takeOut.getAddress());
