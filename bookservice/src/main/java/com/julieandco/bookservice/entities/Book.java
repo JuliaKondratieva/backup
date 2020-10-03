@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 @Entity
 @Table(name = "book")
@@ -27,8 +28,8 @@ public class Book {
     @Column
     private boolean needRepair;
     //@JsonManagedReference(value = "bookorder")
-    @OneToOne(mappedBy="book")
-    private Bookorder bookorder;
+    @OneToMany(mappedBy="book")
+    private List<Bookorder> bookorder;
     //@JsonBackReference(value = "boxId")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
@@ -57,11 +58,11 @@ public class Book {
         return boxId;
     }
 
-    public Bookorder getBookorder() {
+    public List<Bookorder> getBookorder() {
         return bookorder;
     }
 
-    public void setBookorder(Bookorder bookorder) {
+    public void setBookorder(List<Bookorder> bookorder) {
         this.bookorder = bookorder;
     }
 

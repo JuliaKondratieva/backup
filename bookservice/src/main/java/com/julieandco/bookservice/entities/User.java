@@ -3,6 +3,7 @@ package com.julieandco.bookservice.entities;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 @Entity
 @Table(name="customer")
@@ -13,8 +14,8 @@ public class User {
     @Column
     private String username;
     //@JsonManagedReference
-    @OneToOne(mappedBy="customer")
-    private Bookorder bookorder;
+    @OneToMany(mappedBy="customer")
+    private List<Bookorder> bookorder;
 
 
     public User() {
@@ -22,11 +23,11 @@ public class User {
         //idNumber= UUID.randomUUID();
     }
 
-    public Bookorder getBookorder() {
+    public List<Bookorder> getBookorder() {
         return bookorder;
     }
 
-    public void setBookorder(Bookorder order) {
+    public void setBookorder(List<Bookorder> order) {
         this.bookorder = order;
     }
 

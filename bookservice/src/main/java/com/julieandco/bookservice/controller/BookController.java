@@ -2,10 +2,8 @@ package com.julieandco.bookservice.controller;
 
 import com.julieandco.bookservice.entities.Book;
 import com.julieandco.bookservice.entities.Genre;
-import com.julieandco.bookservice.entities.User;
 import com.julieandco.bookservice.entities.dto.BookDTO;
 import com.julieandco.bookservice.entities.dto.BooksDTO;
-import com.julieandco.bookservice.entities.dto.UserDTO;
 import com.julieandco.bookservice.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

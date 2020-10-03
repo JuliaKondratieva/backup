@@ -2,6 +2,7 @@ package com.julieandco.bookservice.service;
 
 import com.julieandco.bookservice.entities.Book;
 import com.julieandco.bookservice.entities.Bookorder;
+import com.julieandco.bookservice.entities.Box;
 import com.julieandco.bookservice.entities.User;
 import com.julieandco.bookservice.repo.BookRepository;
 import com.julieandco.bookservice.repo.OrderRepository;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OrderService {
@@ -29,6 +31,7 @@ public class OrderService {
     @Transactional
     public void addOrder(Book orderedBook, User user){
         Book bookel=bookRepository.findBookByTitle(orderedBook.getTitle());
+        User user1=userRepository.findByUsername(user.getUsername());
         Bookorder newOrder;
         newOrder = null;
         if(bookel==null){
@@ -36,19 +39,25 @@ public class OrderService {
         }
 
         else if(bookel.getAvailability()) {
-            newOrder = new Bookorder(bookel, user);
+            newOrder = new Bookorder(bookel, user1);
             orderRepository.save(newOrder);
             bookel.setAvailable(false);
             bookRepository.save(bookel);
         }
 
         else{
-            newOrder=new Bookorder();
+            newOrder=new Bookorder(bookel, user1);
             newOrder.setSubmitted(false);
             orderRepository.save(newOrder);
             System.out.println("You are in waiting list \n");
         }
     }
+
+    @Transactional
+    public List<Bookorder> findByBookId(UUID id){
+        return orderRepository.findByBookId(id);
+    }
+
 
     @Transactional(readOnly = true)
     public List<Bookorder> getAllOrders() {

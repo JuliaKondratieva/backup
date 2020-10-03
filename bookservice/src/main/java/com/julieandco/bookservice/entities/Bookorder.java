@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 @Entity
 @Table(name="bookorder")
@@ -12,17 +13,17 @@ public class Bookorder {
     @GeneratedValue
     private UUID id;
     //@JsonBackReference(value = "book")
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn
     private Book book;
     //@JsonBackReference(value = "customer")
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn
     private User customer;
     @Column
-    private LocalDate fromDate;
+    private LocalDateTime fromDate;
     @Column
-    private LocalDate dueDate;
+    private LocalDateTime dueDate;
     @Column
     private boolean deliveryState;
     @Column
@@ -39,7 +40,7 @@ public class Bookorder {
     public Bookorder(Book book, User user){
         this.book=book;
         this.customer=user;
-        this.fromDate=LocalDate.now();
+        this.fromDate=LocalDateTime.now();
         this.dueDate=fromDate.plusWeeks(3);
         this.deliveryState=false;
         this.submitted=true;
@@ -53,7 +54,7 @@ public class Bookorder {
         this.book = book;
     }
 
-    public LocalDate getFromDate() {
+    public LocalDateTime getFromDate() {
         return fromDate;
     }
 
@@ -73,7 +74,7 @@ public class Bookorder {
         this.submitted = submitted;
     }
 
-    public void setFromDate(LocalDate fromDate) {
+    public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
 
@@ -93,7 +94,7 @@ public class Bookorder {
         return deliveryState;
     }
 
-    public LocalDate getDueDate(){
+    public LocalDateTime getDueDate(){
         return dueDate;
     }
 
